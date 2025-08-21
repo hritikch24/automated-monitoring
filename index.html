@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKS AI Monitoring Flow with Claude</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .diagram-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 1400px;
+            width: 100%;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        .flow-box {
+            fill: white;
+            stroke-width: 2;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            transition: all 0.3s ease;
+        }
+        
+        .flow-box:hover {
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+        }
+        
+        .azure-box { stroke: #0078d4; }
+        .ai-box { stroke: #7c3aed; }
+        .k8s-box { stroke: #326ce5; }
+        .alert-box { stroke: #ea580c; }
+        .storage-box { stroke: #059669; }
+        .decision-box { stroke: #dc2626; }
+        
+        .flow-text {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            fill: #1f2937;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+        
+        .title-text {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .detail-text {
+            font-size: 12px;
+            fill: #6b7280;
+        }
+        
+        .arrow {
+            stroke: #6b7280;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        
+        .arrow-label {
+            font-size: 11px;
+            fill: #7c3aed;
+            font-weight: 500;
+        }
+        
+        .phase-label {
+            font-size: 18px;
+            font-weight: bold;
+            fill: #1f2937;
+        }
+        
+        .icon {
+            font-size: 24px;
+        }
+        
+        .metrics-section {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid;
+            border-radius: 4px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .animated-flow {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 AKS AI-Powered Monitoring with Claude</h1>
+        <p>Intelligent Log Analysis & Automated Remediation Flow</p>
+    </div>
+    
+    <div class="diagram-container">
+        <svg viewBox="0 0 1200 1400" xmlns="http://www.w3.org/2000/svg">
+            <!-- Define arrow marker -->
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#6b7280"/>
+                </marker>
+                <linearGradient id="aiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:0.1" />
+                    <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0.2" />
+                </linearGradient>
+            </defs>
+            
+            <!-- Phase 1: Data Collection -->
+            <text x="100" y="40" class="phase-label">PHASE 1: Data Collection</text>
+            
+            <!-- AKS Cluster -->
+            <rect x="50" y="70" width="180" height="100" rx="10" class="flow-box k8s-box"/>
+            <text x="140" y="100" class="flow-text">
+                <tspan class="icon">☸️</tspan>
+            </text>
+            <text x="140" y="125" class="flow-text title-text">AKS Cluster</text>
+            <text x="140" y="145" class="flow-text detail-text">• Pods/Containers</text>
+            <text x="140" y="160" class="flow-text detail-text">• Application Logs</text>
+            
+            <!-- Log Analytics -->
+            <rect x="300" y="70" width="180" height="100" rx="10" class="flow-box azure-box"/>
+            <text x="390" y="100" class="flow-text">
+                <tspan class="icon">📊</tspan>
+            </text>
+            <text x="390" y="125" class="flow-text title-text">Log Analytics</text>
+            <text x="390" y="145" class="flow-text detail-text">• Container Insights</text>
+            <text x="390" y="160" class="flow-text detail-text">• KQL Queries</text>
+            
+            <!-- Storage Account -->
+            <rect x="550" y="70" width="180" height="100" rx="10" class="flow-box storage-box"/>
+            <text x="640" y="100" class="flow-text">
+                <tspan class="icon">💾</tspan>
+            </text>
+            <text x="640" y="125" class="flow-text title-text">Storage Account</text>
+            <text x="640" y="145" class="flow-text detail-text">• Blob Storage</text>
+            <text x="640" y="160" class="flow-text detail-text">• 5-min batches</text>
+            
+            <!-- Arrows Phase 1 -->
+            <path d="M 230 120 L 300 120" class="arrow"/>
+            <text x="265" y="110" class="arrow-label">Stream</text>
+            
+            <path d="M 480 120 L 550 120" class="arrow"/>
+            <text x="515" y="110" class="arrow-label">Export</text>
+            
+            <!-- Phase 2: Orchestration -->
+            <text x="100" y="220" class="phase-label">PHASE 2: Orchestration</text>
+            
+            <!-- Logic Apps -->
+            <rect x="300" y="250" width="180" height="120" rx="10" class="flow-box azure-box"/>
+            <text x="390" y="280" class="flow-text">
+                <tspan class="icon">⚡</tspan>
+            </text>
+            <text x="390" y="305" class="flow-text title-text">Azure Logic Apps</text>
+            <text x="390" y="325" class="flow-text detail-text">• Timer: 5 min</text>
+            <text x="390" y="345" class="flow-text detail-text">• Read logs</text>
+            <text x="390" y="365" class="flow-text detail-text">• Orchestrate flow</text>
+            
+            <!-- Arrow from Storage to Logic Apps -->
+            <path d="M 640 170 L 640 210 L 390 210 L 390 250" class="arrow"/>
+            <text x="520" y="200" class="arrow-label">Trigger</text>
+            
+            <!-- Phase 3: AI Analysis -->
+            <text x="100" y="420" class="phase-label">PHASE 3: AI Analysis</text>
+            
+            <!-- Claude AI Box -->
+            <rect x="250" y="450" width="280" height="140" rx="10" class="flow-box ai-box" fill="url(#aiGradient)"/>
+            <text x="390" y="480" class="flow-text">
+                <tspan class="icon">🧠</tspan>
+            </text>
+            <text x="390" y="510" class="flow-text title-text">Claude AI (Anthropic)</text>
+            <text x="390" y="535" class="flow-text detail-text">• Pattern Recognition</text>
+            <text x="390" y="555" class="flow-text detail-text">• Error Classification</text>
+            <text x="390" y="575" class="flow-text detail-text">• Severity Assessment</text>
+            
+            <!-- AI Prompt Box -->
+            <rect x="600" y="450" width="200" height="140" rx="10" class="flow-box ai-box"/>
+            <text x="700" y="480" class="flow-text title-text">AI Prompt</text>
+            <text x="700" y="505" class="flow-text detail-text">✓ Analyze errors</text>
+            <text x="700" y="525" class="flow-text detail-text">✓ Identify patterns</text>
+            <text x="700" y="545" class="flow-text detail-text">✓ Suggest actions</text>
+            <text x="700" y="565" class="flow-text detail-text">✓ Return JSON</text>
+            
+            <!-- Arrow to Claude -->
+            <path d="M 390 370 L 390 450" class="arrow animated-flow"/>
+            <text x="340" y="410" class="arrow-label">Send Logs</text>
+            
+            <!-- Arrow from Prompt to Claude -->
+            <path d="M 600 520 L 530 520" class="arrow"/>
+            
+            <!-- Phase 4: Decision Making -->
+            <text x="100" y="640" class="phase-label">PHASE 4: Decision & Action</text>
+            
+            <!-- Decision Diamond -->
+            <g transform="translate(390, 720)">
+                <path d="M 0 -50 L 50 0 L 0 50 L -50 0 Z" class="flow-box decision-box"/>
+                <text x="0" y="5" class="flow-text title-text">Decision</text>
+            </g>
+            
+            <!-- Arrow from Claude to Decision -->
+            <path d="M 390 590 L 390 670" class="arrow"/>
+            <text x="420" y="630" class="arrow-label">AI Response</text>
+            
+            <!-- Action Boxes -->
+            <!-- Restart Pod -->
+            <rect x="50" y="820" width="180" height="100" rx="10" class="flow-box k8s-box"/>
+            <text x="140" y="850" class="flow-text">
+                <tspan class="icon">🔄</tspan>
+            </text>
+            <text x="140" y="875" class="flow-text title-text">Restart Pod</text>
+            <text x="140" y="895" class="flow-text detail-text">kubectl rollout</text>
+            
+            <!-- Alert Only -->
+            <rect x="300" y="820" width="180" height="100" rx="10" class="flow-box alert-box"/>
+            <text x="390" y="850" class="flow-text">
+                <tspan class="icon">⚠️</tspan>
+            </text>
+            <text x="390" y="875" class="flow-text title-text">Alert Only</text>
+            <text x="390" y="895" class="flow-text detail-text">Manual review</text>
+            
+            <!-- Monitor -->
+            <rect x="550" y="820" width="180" height="100" rx="10" class="flow-box storage-box"/>
+            <text x="640" y="850" class="flow-text">
+                <tspan class="icon">👁️</tspan>
+            </text>
+            <text x="640" y="875" class="flow-text title-text">Monitor</text>
+            <text x="640" y="895" class="flow-text detail-text">Log & watch</text>
+            
+            <!-- Decision Arrows -->
+            <path d="M 340 720 L 140 720 L 140 820" class="arrow"/>
+            <text x="200" y="710" class="arrow-label">Severity ≥ 4</text>
+            
+            <path d="M 390 770 L 390 820" class="arrow"/>
+            <text x="410" y="795" class="arrow-label">Severity = 3</text>
+            
+            <path d="M 440 720 L 640 720 L 640 820" class="arrow"/>
+            <text x="520" y="710" class="arrow-label">Severity < 3</text>
+            
+            <!-- Phase 5: Notification -->
+            <text x="100" y="970" class="phase-label">PHASE 5: Notification & Feedback</text>
+            
+            <!-- Teams Alert -->
+            <rect x="300" y="1000" width="180" height="100" rx="10" class="flow-box alert-box"/>
+            <text x="390" y="1030" class="flow-text">
+                <tspan class="icon">💬</tspan>
+            </text>
+            <text x="390" y="1055" class="flow-text title-text">Microsoft Teams</text>
+            <text x="390" y="1075" class="flow-text detail-text">• Alert DevOps</text>
+            <text x="390" y="1095" class="flow-text detail-text">• Action summary</text>
+            
+            <!-- Application Insights -->
+            <rect x="550" y="1000" width="180" height="100" rx="10" class="flow-box azure-box"/>
+            <text x="640" y="1030" class="flow-text">
+                <tspan class="icon">📈</tspan>
+            </text>
+            <text x="640" y="1055" class="flow-text title-text">App Insights</text>
+            <text x="640" y="1075" class="flow-text detail-text">• Metrics</text>
+            <text x="640" y="1095" class="flow-text detail-text">• Trending</text>
+            
+            <!-- Arrows to notification -->
+            <path d="M 140 920 L 140 960 L 390 960 L 390 1000" class="arrow"/>
+            <path d="M 390 920 L 390 1000" class="arrow"/>
+            <path d="M 640 920 L 640 1000" class="arrow"/>
+            
+            <!-- Feedback Loop -->
+            <path d="M 800 520 L 850 520 L 850 1050 L 730 1050" class="arrow" stroke-dasharray="5,5"/>
+            <text x="860" y="780" class="arrow-label" transform="rotate(90 860 780)">Feedback Loop</text>
+            
+            <!-- Cost Box -->
+            <rect x="900" y="70" width="240" height="140" rx="10" class="flow-box" stroke="#10b981"/>
+            <text x="1020" y="100" class="flow-text title-text">💰 Cost Breakdown</text>
+            <text x="1020" y="125" class="flow-text detail-text">Logic Apps: $0.22/month</text>
+            <text x="1020" y="145" class="flow-text detail-text">Claude API: ~$50-100/month</text>
+            <text x="1020" y="165" class="flow-text detail-text">Storage: ~$5/month</text>
+            <text x="1020" y="185" class="flow-text detail-text">Total: &lt; $150/month</text>
+            
+            <!-- Benefits Box -->
+            <rect x="900" y="250" width="240" height="160" rx="10" class="flow-box" stroke="#8b5cf6"/>
+            <text x="1020" y="280" class="flow-text title-text">✨ Key Benefits</text>
+            <text x="1020" y="305" class="flow-text detail-text">• 70% automation</text>
+            <text x="1020" y="325" class="flow-text detail-text">• MTTD &lt; 5 minutes</text>
+            <text x="1020" y="345" class="flow-text detail-text">• MTTR &lt; 10 minutes</text>
+            <text x="1020" y="365" class="flow-text detail-text">• 24/7 monitoring</text>
+            <text x="1020" y="385" class="flow-text detail-text">• No manual scripts</text>
+            
+            <!-- AI Capabilities Box -->
+            <rect x="900" y="450" width="240" height="180" rx="10" class="flow-box ai-box"/>
+            <text x="1020" y="480" class="flow-text title-text">🧠 Claude Capabilities</text>
+            <text x="1020" y="505" class="flow-text detail-text">• OOMKilled detection</text>
+            <text x="1020" y="525" class="flow-text detail-text">• CrashLoopBackOff</text>
+            <text x="1020" y="545" class="flow-text detail-text">• Connection timeouts</text>
+            <text x="1020" y="565" class="flow-text detail-text">• DB pool exhaustion</text>
+            <text x="1020" y="585" class="flow-text detail-text">• Pattern recognition</text>
+            <text x="1020" y="605" class="flow-text detail-text">• Root cause analysis</text>
+            
+            <!-- Success Metrics -->
+            <rect x="50" y="1150" width="1090" height="100" rx="10" class="flow-box" stroke="#059669" fill="#f0fdf4"/>
+            <text x="595" y="1180" class="flow-text title-text">📊 Success Metrics Dashboard</text>
+            <text x="200" y="1210" class="flow-text detail-text">Incidents/Day: 12→3</text>
+            <text x="400" y="1210" class="flow-text detail-text">Auto-Resolved: 70%</text>
+            <text x="600" y="1210" class="flow-text detail-text">False Positives: &lt;10%</text>
+            <text x="800" y="1210" class="flow-text detail-text">Manual Work: -80%</text>
+            <text x="1000" y="1210" class="flow-text detail-text">Team Alerts: -60%</text>
+            <text x="200" y="1230" class="flow-text detail-text">Uptime: 99.5%→99.9%</text>
+            <text x="400" y="1230" class="flow-text detail-text">Cost/Incident: $0.50</text>
+            <text x="600" y="1230" class="flow-text detail-text">Response Time: 24/7</text>
+            <text x="800" y="1230" class="flow-text detail-text">Coverage: 100%</text>
+            <text x="1000" y="1230" class="flow-text detail-text">ROI: 300%+</text>
+        </svg>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="border-color: #0078d4;"></div>
+                <span>Azure Services</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="border-color: #7c3aed; background: rgba(124, 58, 237, 0.1);"></div>
+                <span>AI/Claude</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="border-color: #326ce5;"></div>
+                <span>Kubernetes</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="border-color: #ea580c;"></div>
+                <span>Alerts</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="border-color: #059669;"></div>
+                <span>Storage/Monitor</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="border-color: #dc2626;"></div>
+                <span>Decision Point</span>
+            </div>
+        </div>
+        
+        <div class="metrics-section">
+            <div class="metric-card">
+                <div class="metric-value">5 min</div>
+                <div class="metric-label">Detection Time</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">70%</div>
+                <div class="metric-label">Automation Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">24/7</div>
+                <div class="metric-label">Monitoring Coverage</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">$0.50</div>
+                <div class="metric-label">Cost per Incident</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
