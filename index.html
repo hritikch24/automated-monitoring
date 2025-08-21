@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AKS AI Monitoring Flow with Claude</title>
+    <title>AKS AI Monitoring Flow with Claude & Vector</title>
     <style>
         * {
             margin: 0;
@@ -71,6 +71,7 @@
         .alert-box { stroke: #ea580c; }
         .storage-box { stroke: #059669; }
         .decision-box { stroke: #dc2626; }
+        .vector-box { stroke: #f59e0b; }
         
         .flow-text {
             font-family: 'Segoe UI', sans-serif;
@@ -188,16 +189,29 @@
         .animated-flow {
             animation: pulse 2s infinite;
         }
+        
+        .vector-flow {
+            stroke: #f59e0b;
+            stroke-width: 3;
+            stroke-dasharray: 10,5;
+            animation: flow 2s linear infinite;
+        }
+        
+        @keyframes flow {
+            to {
+                stroke-dashoffset: -15;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>🤖 AKS AI-Powered Monitoring with Claude</h1>
-        <p>Intelligent Log Analysis & Automated Remediation Flow</p>
+        <p>Intelligent Log Analysis & Automated Remediation System</p>
     </div>
     
     <div class="diagram-container">
-        <svg viewBox="0 0 1200 1400" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1200 1500" xmlns="http://www.w3.org/2000/svg">
             <!-- Define arrow marker -->
             <defs>
                 <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
@@ -207,218 +221,289 @@
                     <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:0.1" />
                     <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0.2" />
                 </linearGradient>
+                <linearGradient id="vectorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.1" />
+                    <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0.2" />
+                </linearGradient>
             </defs>
             
-            <!-- Phase 1: Data Collection -->
-            <text x="100" y="40" class="phase-label">PHASE 1: Data Collection</text>
+            <!-- Current State Label -->
+            <rect x="50" y="10" width="150" height="30" rx="5" fill="#10b981"/>
+            <text x="125" y="30" class="flow-text" fill="white" font-weight="bold">CURRENT STATE</text>
+            
+            <!-- Phase 1: Existing Data Collection -->
+            <text x="100" y="70" class="phase-label">PHASE 1: Existing Log Pipeline (Already in Place)</text>
             
             <!-- AKS Cluster -->
-            <rect x="50" y="70" width="180" height="100" rx="10" class="flow-box k8s-box"/>
-            <text x="140" y="100" class="flow-text">
+            <rect x="50" y="100" width="180" height="100" rx="10" class="flow-box k8s-box"/>
+            <text x="140" y="130" class="flow-text">
                 <tspan class="icon">☸️</tspan>
             </text>
-            <text x="140" y="125" class="flow-text title-text">AKS Cluster</text>
-            <text x="140" y="145" class="flow-text detail-text">• Pods/Containers</text>
-            <text x="140" y="160" class="flow-text detail-text">• Application Logs</text>
+            <text x="140" y="155" class="flow-text title-text">AKS Cluster</text>
+            <text x="140" y="175" class="flow-text detail-text">• Pods/Containers</text>
+            <text x="140" y="190" class="flow-text detail-text">• Application Logs</text>
             
-            <!-- Log Analytics -->
-            <rect x="300" y="70" width="180" height="100" rx="10" class="flow-box azure-box"/>
-            <text x="390" y="100" class="flow-text">
-                <tspan class="icon">📊</tspan>
+            <!-- Vector -->
+            <rect x="300" y="100" width="200" height="100" rx="10" class="flow-box vector-box" fill="url(#vectorGradient)"/>
+            <text x="400" y="130" class="flow-text">
+                <tspan class="icon">🚀</tspan>
             </text>
-            <text x="390" y="125" class="flow-text title-text">Log Analytics</text>
-            <text x="390" y="145" class="flow-text detail-text">• Container Insights</text>
-            <text x="390" y="160" class="flow-text detail-text">• KQL Queries</text>
+            <text x="400" y="155" class="flow-text title-text">Vector (Installed)</text>
+            <text x="400" y="175" class="flow-text detail-text">• DaemonSet on AKS</text>
+            <text x="400" y="190" class="flow-text detail-text">• Log aggregation</text>
             
             <!-- Storage Account -->
-            <rect x="550" y="70" width="180" height="100" rx="10" class="flow-box storage-box"/>
-            <text x="640" y="100" class="flow-text">
+            <rect x="570" y="100" width="180" height="100" rx="10" class="flow-box storage-box"/>
+            <text x="660" y="130" class="flow-text">
                 <tspan class="icon">💾</tspan>
             </text>
-            <text x="640" y="125" class="flow-text title-text">Storage Account</text>
-            <text x="640" y="145" class="flow-text detail-text">• Blob Storage</text>
-            <text x="640" y="160" class="flow-text detail-text">• 5-min batches</text>
+            <text x="660" y="155" class="flow-text title-text">Storage Account</text>
+            <text x="660" y="175" class="flow-text detail-text">• Blob Storage</text>
+            <text x="660" y="190" class="flow-text detail-text">• 5-min batches</text>
             
             <!-- Arrows Phase 1 -->
-            <path d="M 230 120 L 300 120" class="arrow"/>
-            <text x="265" y="110" class="arrow-label">Stream</text>
+            <path d="M 230 150 L 300 150" class="vector-flow"/>
+            <text x="265" y="140" class="arrow-label">Collect</text>
             
-            <path d="M 480 120 L 550 120" class="arrow"/>
-            <text x="515" y="110" class="arrow-label">Export</text>
+            <path d="M 500 150 L 570 150" class="vector-flow"/>
+            <text x="535" y="140" class="arrow-label">Push</text>
             
-            <!-- Phase 2: Orchestration -->
-            <text x="100" y="220" class="phase-label">PHASE 2: Orchestration</text>
+            <!-- New Addition Label -->
+            <rect x="50" y="240" width="150" height="30" rx="5" fill="#7c3aed"/>
+            <text x="125" y="260" class="flow-text" fill="white" font-weight="bold">NEW ADDITION</text>
+            
+            <!-- Phase 2: AI Integration -->
+            <text x="100" y="300" class="phase-label">PHASE 2: AI-Powered Analysis Layer</text>
             
             <!-- Logic Apps -->
-            <rect x="300" y="250" width="180" height="120" rx="10" class="flow-box azure-box"/>
-            <text x="390" y="280" class="flow-text">
+            <rect x="300" y="330" width="200" height="120" rx="10" class="flow-box azure-box"/>
+            <text x="400" y="360" class="flow-text">
                 <tspan class="icon">⚡</tspan>
             </text>
-            <text x="390" y="305" class="flow-text title-text">Azure Logic Apps</text>
-            <text x="390" y="325" class="flow-text detail-text">• Timer: 5 min</text>
-            <text x="390" y="345" class="flow-text detail-text">• Read logs</text>
-            <text x="390" y="365" class="flow-text detail-text">• Orchestrate flow</text>
+            <text x="400" y="385" class="flow-text title-text">Azure Logic Apps</text>
+            <text x="400" y="405" class="flow-text detail-text">• Timer: 5 min</text>
+            <text x="400" y="425" class="flow-text detail-text">• Read from blob</text>
+            <text x="400" y="445" class="flow-text detail-text">• Orchestrate AI calls</text>
+            
+            <!-- Function App Alternative -->
+            <rect x="570" y="330" width="180" height="120" rx="10" class="flow-box azure-box" stroke-dasharray="5,5"/>
+            <text x="660" y="360" class="flow-text">
+                <tspan class="icon">⚙️</tspan>
+            </text>
+            <text x="660" y="385" class="flow-text title-text">OR Function App</text>
+            <text x="660" y="405" class="flow-text detail-text">• Python/Node.js</text>
+            <text x="660" y="425" class="flow-text detail-text">• Blob trigger</text>
+            <text x="660" y="445" class="flow-text detail-text">• More control</text>
             
             <!-- Arrow from Storage to Logic Apps -->
-            <path d="M 640 170 L 640 210 L 390 210 L 390 250" class="arrow"/>
-            <text x="520" y="200" class="arrow-label">Trigger</text>
+            <path d="M 660 200 L 660 250 L 400 250 L 400 330" class="arrow"/>
+            <text x="530" y="240" class="arrow-label">Trigger on new logs</text>
             
             <!-- Phase 3: AI Analysis -->
-            <text x="100" y="420" class="phase-label">PHASE 3: AI Analysis</text>
+            <text x="100" y="500" class="phase-label">PHASE 3: Claude AI Analysis</text>
             
-            <!-- Claude AI Box -->
-            <rect x="250" y="450" width="280" height="140" rx="10" class="flow-box ai-box" fill="url(#aiGradient)"/>
-            <text x="390" y="480" class="flow-text">
+            <!-- Claude AI Box with Ignore Feature -->
+            <rect x="250" y="530" width="280" height="160" rx="10" class="flow-box ai-box" fill="url(#aiGradient)"/>
+            <text x="390" y="560" class="flow-text">
                 <tspan class="icon">🧠</tspan>
             </text>
-            <text x="390" y="510" class="flow-text title-text">Claude AI (Anthropic)</text>
-            <text x="390" y="535" class="flow-text detail-text">• Pattern Recognition</text>
-            <text x="390" y="555" class="flow-text detail-text">• Error Classification</text>
-            <text x="390" y="575" class="flow-text detail-text">• Severity Assessment</text>
+            <text x="390" y="590" class="flow-text title-text">Claude AI (Anthropic)</text>
+            <text x="390" y="615" class="flow-text detail-text">• Pattern Recognition</text>
+            <text x="390" y="635" class="flow-text detail-text">• Error Classification</text>
+            <text x="390" y="655" class="flow-text detail-text">• FALSE POSITIVE Filter</text>
+            <text x="390" y="675" class="flow-text detail-text">• Severity Assessment</text>
+            <text x="390" y="690" class="flow-text detail-text">• Root Cause Analysis</text>
             
-            <!-- AI Prompt Box -->
-            <rect x="600" y="450" width="200" height="140" rx="10" class="flow-box ai-box"/>
-            <text x="700" y="480" class="flow-text title-text">AI Prompt</text>
-            <text x="700" y="505" class="flow-text detail-text">✓ Analyze errors</text>
-            <text x="700" y="525" class="flow-text detail-text">✓ Identify patterns</text>
-            <text x="700" y="545" class="flow-text detail-text">✓ Suggest actions</text>
-            <text x="700" y="565" class="flow-text detail-text">✓ Return JSON</text>
+            <!-- Vector Log Format Box -->
+            <rect x="600" y="530" width="200" height="150" rx="10" class="flow-box vector-box"/>
+            <text x="700" y="560" class="flow-text title-text">Vector Log Format</text>
+            <text x="700" y="585" class="flow-text detail-text">• JSON structured</text>
+            <text x="700" y="605" class="flow-text detail-text">• Timestamps</text>
+            <text x="700" y="625" class="flow-text detail-text">• Pod metadata</text>
+            <text x="700" y="645" class="flow-text detail-text">• Namespace info</text>
+            <text x="700" y="665" class="flow-text detail-text">• Container logs</text>
             
             <!-- Arrow to Claude -->
-            <path d="M 390 370 L 390 450" class="arrow animated-flow"/>
-            <text x="340" y="410" class="arrow-label">Send Logs</text>
+            <path d="M 400 450 L 400 530" class="arrow animated-flow"/>
+            <text x="350" y="490" class="arrow-label">Send Logs</text>
             
-            <!-- Arrow from Prompt to Claude -->
-            <path d="M 600 520 L 530 520" class="arrow"/>
+            <!-- Arrow from Vector Format to Claude -->
+            <path d="M 600 605 L 530 605" class="arrow"/>
             
             <!-- Phase 4: Decision Making -->
-            <text x="100" y="640" class="phase-label">PHASE 4: Decision & Action</text>
+            <text x="100" y="730" class="phase-label">PHASE 4: Intelligent Decision & Action</text>
             
             <!-- Decision Diamond -->
-            <g transform="translate(390, 720)">
+            <g transform="translate(400, 810)">
                 <path d="M 0 -50 L 50 0 L 0 50 L -50 0 Z" class="flow-box decision-box"/>
-                <text x="0" y="5" class="flow-text title-text">Decision</text>
+                <text x="0" y="-5" class="flow-text title-text">AI Decision</text>
+                <text x="0" y="15" class="flow-text detail-text" font-size="10">+ Ignore Filter</text>
             </g>
             
             <!-- Arrow from Claude to Decision -->
-            <path d="M 390 590 L 390 670" class="arrow"/>
-            <text x="420" y="630" class="arrow-label">AI Response</text>
+            <path d="M 390 680 L 390 760" class="arrow"/>
+            <text x="420" y="720" class="arrow-label">JSON Response</text>
             
             <!-- Action Boxes -->
+            <!-- Ignore Box -->
+            <rect x="50" y="910" width="140" height="100" rx="10" class="flow-box" stroke="#94a3b8"/>
+            <text x="120" y="940" class="flow-text">
+                <tspan class="icon">🚫</tspan>
+            </text>
+            <text x="120" y="965" class="flow-text title-text">Ignore</text>
+            <text x="120" y="985" class="flow-text detail-text">Known false</text>
+            <text x="120" y="1000" class="flow-text detail-text">positives</text>
+            
             <!-- Restart Pod -->
-            <rect x="50" y="820" width="180" height="100" rx="10" class="flow-box k8s-box"/>
-            <text x="140" y="850" class="flow-text">
+            <rect x="210" y="910" width="140" height="100" rx="10" class="flow-box k8s-box"/>
+            <text x="280" y="940" class="flow-text">
                 <tspan class="icon">🔄</tspan>
             </text>
-            <text x="140" y="875" class="flow-text title-text">Restart Pod</text>
-            <text x="140" y="895" class="flow-text detail-text">kubectl rollout</text>
+            <text x="280" y="965" class="flow-text title-text">Auto-Restart</text>
+            <text x="280" y="985" class="flow-text detail-text">kubectl rollout</text>
+            <text x="280" y="1000" class="flow-text detail-text">+ Alert team</text>
             
             <!-- Alert Only -->
-            <rect x="300" y="820" width="180" height="100" rx="10" class="flow-box alert-box"/>
-            <text x="390" y="850" class="flow-text">
+            <rect x="370" y="910" width="140" height="100" rx="10" class="flow-box alert-box"/>
+            <text x="440" y="940" class="flow-text">
                 <tspan class="icon">⚠️</tspan>
             </text>
-            <text x="390" y="875" class="flow-text title-text">Alert Only</text>
-            <text x="390" y="895" class="flow-text detail-text">Manual review</text>
+            <text x="440" y="965" class="flow-text title-text">Alert Only</text>
+            <text x="440" y="985" class="flow-text detail-text">Teams notify</text>
+            <text x="440" y="1000" class="flow-text detail-text">Manual review</text>
             
             <!-- Monitor -->
-            <rect x="550" y="820" width="180" height="100" rx="10" class="flow-box storage-box"/>
-            <text x="640" y="850" class="flow-text">
-                <tspan class="icon">👁️</tspan>
+            <rect x="530" y="910" width="140" height="100" rx="10" class="flow-box storage-box"/>
+            <text x="600" y="940" class="flow-text">
+                <tspan class="icon">📊</tspan>
             </text>
-            <text x="640" y="875" class="flow-text title-text">Monitor</text>
-            <text x="640" y="895" class="flow-text detail-text">Log & watch</text>
+            <text x="600" y="965" class="flow-text title-text">Log & Track</text>
+            <text x="600" y="985" class="flow-text detail-text">App Insights</text>
+            <text x="600" y="1000" class="flow-text detail-text">Trend analysis</text>
             
             <!-- Decision Arrows -->
-            <path d="M 340 720 L 140 720 L 140 820" class="arrow"/>
-            <text x="200" y="710" class="arrow-label">Severity ≥ 4</text>
+            <path d="M 350 810 L 120 810 L 120 910" class="arrow"/>
+            <text x="180" y="800" class="arrow-label">Ignore</text>
             
-            <path d="M 390 770 L 390 820" class="arrow"/>
-            <text x="410" y="795" class="arrow-label">Severity = 3</text>
+            <path d="M 370 840 L 280 840 L 280 910" class="arrow"/>
+            <text x="300" y="830" class="arrow-label">Critical (4-5)</text>
             
-            <path d="M 440 720 L 640 720 L 640 820" class="arrow"/>
-            <text x="520" y="710" class="arrow-label">Severity < 3</text>
+            <path d="M 400 860 L 440 860 L 440 910" class="arrow"/>
+            <text x="420" y="850" class="arrow-label">High (3)</text>
+            
+            <path d="M 450 810 L 600 810 L 600 910" class="arrow"/>
+            <text x="520" y="800" class="arrow-label">Low (1-2)</text>
             
             <!-- Phase 5: Notification -->
-            <text x="100" y="970" class="phase-label">PHASE 5: Notification & Feedback</text>
+            <text x="100" y="1060" class="phase-label">PHASE 5: Team Notification & Learning</text>
             
             <!-- Teams Alert -->
-            <rect x="300" y="1000" width="180" height="100" rx="10" class="flow-box alert-box"/>
-            <text x="390" y="1030" class="flow-text">
+            <rect x="200" y="1090" width="200" height="110" rx="10" class="flow-box alert-box"/>
+            <text x="300" y="1120" class="flow-text">
                 <tspan class="icon">💬</tspan>
             </text>
-            <text x="390" y="1055" class="flow-text title-text">Microsoft Teams</text>
-            <text x="390" y="1075" class="flow-text detail-text">• Alert DevOps</text>
-            <text x="390" y="1095" class="flow-text detail-text">• Action summary</text>
+            <text x="300" y="1145" class="flow-text title-text">Microsoft Teams</text>
+            <text x="300" y="1165" class="flow-text detail-text">• Smart alerts</text>
+            <text x="300" y="1185" class="flow-text detail-text">• Action summary</text>
             
             <!-- Application Insights -->
-            <rect x="550" y="1000" width="180" height="100" rx="10" class="flow-box azure-box"/>
-            <text x="640" y="1030" class="flow-text">
+            <rect x="450" y="1090" width="200" height="110" rx="10" class="flow-box azure-box"/>
+            <text x="550" y="1120" class="flow-text">
                 <tspan class="icon">📈</tspan>
             </text>
-            <text x="640" y="1055" class="flow-text title-text">App Insights</text>
-            <text x="640" y="1075" class="flow-text detail-text">• Metrics</text>
-            <text x="640" y="1095" class="flow-text detail-text">• Trending</text>
+            <text x="550" y="1145" class="flow-text title-text">Application Insights</text>
+            <text x="550" y="1165" class="flow-text detail-text">• Success metrics</text>
+            <text x="550" y="1185" class="flow-text detail-text">• Pattern learning</text>
             
             <!-- Arrows to notification -->
-            <path d="M 140 920 L 140 960 L 390 960 L 390 1000" class="arrow"/>
-            <path d="M 390 920 L 390 1000" class="arrow"/>
-            <path d="M 640 920 L 640 1000" class="arrow"/>
+            <path d="M 120 1010 L 120 1050 L 300 1050 L 300 1090" class="arrow" stroke-dasharray="3,3" opacity="0.5"/>
+            <path d="M 280 1010 L 280 1050 L 300 1050 L 300 1090" class="arrow"/>
+            <path d="M 440 1010 L 440 1050 L 440 1090" class="arrow"/>
+            <path d="M 600 1010 L 600 1050 L 550 1050 L 550 1090" class="arrow"/>
             
             <!-- Feedback Loop -->
-            <path d="M 800 520 L 850 520 L 850 1050 L 730 1050" class="arrow" stroke-dasharray="5,5"/>
-            <text x="860" y="780" class="arrow-label" transform="rotate(90 860 780)">Feedback Loop</text>
+            <path d="M 650 1145 L 850 1145 L 850 605 L 800 605" class="arrow" stroke-dasharray="5,5"/>
+            <text x="860" y="875" class="arrow-label" transform="rotate(90 860 875)">Learning Loop</text>
             
-            <!-- Cost Box -->
-            <rect x="900" y="70" width="240" height="140" rx="10" class="flow-box" stroke="#10b981"/>
-            <text x="1020" y="100" class="flow-text title-text">💰 Cost Breakdown</text>
-            <text x="1020" y="125" class="flow-text detail-text">Logic Apps: $0.22/month</text>
-            <text x="1020" y="145" class="flow-text detail-text">Claude API: ~$50-100/month</text>
-            <text x="1020" y="165" class="flow-text detail-text">Storage: ~$5/month</text>
-            <text x="1020" y="185" class="flow-text detail-text">Total: &lt; $150/month</text>
+            <!-- Implementation Steps Box -->
+            <rect x="900" y="100" width="260" height="200" rx="10" class="flow-box" stroke="#10b981"/>
+            <text x="1030" y="130" class="flow-text title-text">✅ Quick Implementation</text>
+            <text x="1030" y="155" class="flow-text detail-text">1. Create Logic App/Function</text>
+            <text x="1030" y="175" class="flow-text detail-text">2. Configure blob trigger</text>
+            <text x="1030" y="195" class="flow-text detail-text">3. Get Claude API key</text>
+            <text x="1030" y="215" class="flow-text detail-text">4. Setup Teams webhook</text>
+            <text x="1030" y="235" class="flow-text detail-text">5. Grant K8s permissions</text>
+            <text x="1030" y="255" class="flow-text detail-text">6. Test with sample logs</text>
+            <text x="1030" y="275" class="flow-text detail-text">⏱️ Total setup: ~2 hours</text>
             
-            <!-- Benefits Box -->
-            <rect x="900" y="250" width="240" height="160" rx="10" class="flow-box" stroke="#8b5cf6"/>
-            <text x="1020" y="280" class="flow-text title-text">✨ Key Benefits</text>
-            <text x="1020" y="305" class="flow-text detail-text">• 70% automation</text>
-            <text x="1020" y="325" class="flow-text detail-text">• MTTD &lt; 5 minutes</text>
-            <text x="1020" y="345" class="flow-text detail-text">• MTTR &lt; 10 minutes</text>
-            <text x="1020" y="365" class="flow-text detail-text">• 24/7 monitoring</text>
-            <text x="1020" y="385" class="flow-text detail-text">• No manual scripts</text>
+            <!-- Ignore List Configuration Box -->
+            <rect x="900" y="320" width="260" height="180" rx="10" class="flow-box" stroke="#94a3b8"/>
+            <text x="1030" y="350" class="flow-text title-text">🚫 Ignore List Config</text>
+            <text x="1030" y="375" class="flow-text detail-text">Known False Positives:</text>
+            <text x="1030" y="395" class="flow-text detail-text">• "connection reset by peer"</text>
+            <text x="1030" y="415" class="flow-text detail-text">• Health check timeouts</text>
+            <text x="1030" y="435" class="flow-text detail-text">• Graceful shutdown logs</text>
+            <text x="1030" y="455" class="flow-text detail-text">• Expected 404 errors</text>
+            <text x="1030" y="475" class="flow-text detail-text">• Debug/trace messages</text>
+            <text x="1030" y="495" class="flow-text detail-text">✓ AI learns patterns over time</text>
             
             <!-- AI Capabilities Box -->
-            <rect x="900" y="450" width="240" height="180" rx="10" class="flow-box ai-box"/>
-            <text x="1020" y="480" class="flow-text title-text">🧠 Claude Capabilities</text>
-            <text x="1020" y="505" class="flow-text detail-text">• OOMKilled detection</text>
-            <text x="1020" y="525" class="flow-text detail-text">• CrashLoopBackOff</text>
-            <text x="1020" y="545" class="flow-text detail-text">• Connection timeouts</text>
-            <text x="1020" y="565" class="flow-text detail-text">• DB pool exhaustion</text>
-            <text x="1020" y="585" class="flow-text detail-text">• Pattern recognition</text>
-            <text x="1020" y="605" class="flow-text detail-text">• Root cause analysis</text>
+            <rect x="900" y="520" width="260" height="200" rx="10" class="flow-box ai-box"/>
+            <text x="1030" y="550" class="flow-text title-text">🧠 Claude Analysis</text>
+            <text x="1030" y="575" class="flow-text detail-text">• OOMKilled detection</text>
+            <text x="1030" y="595" class="flow-text detail-text">• CrashLoopBackOff</text>
+            <text x="1030" y="615" class="flow-text detail-text">• Connection failures</text>
+            <text x="1030" y="635" class="flow-text detail-text">• Resource exhaustion</text>
+            <text x="1030" y="655" class="flow-text detail-text">• Pattern correlation</text>
+            <text x="1030" y="675" class="flow-text detail-text">• FALSE POSITIVE filtering</text>
+            <text x="1030" y="695" class="flow-text detail-text">• Known error ignore list</text>
             
-            <!-- Success Metrics -->
-            <rect x="50" y="1150" width="1090" height="100" rx="10" class="flow-box" stroke="#059669" fill="#f0fdf4"/>
-            <text x="595" y="1180" class="flow-text title-text">📊 Success Metrics Dashboard</text>
-            <text x="200" y="1210" class="flow-text detail-text">Incidents/Day: 12→3</text>
-            <text x="400" y="1210" class="flow-text detail-text">Auto-Resolved: 70%</text>
-            <text x="600" y="1210" class="flow-text detail-text">False Positives: &lt;10%</text>
-            <text x="800" y="1210" class="flow-text detail-text">Manual Work: -80%</text>
-            <text x="1000" y="1210" class="flow-text detail-text">Team Alerts: -60%</text>
-            <text x="200" y="1230" class="flow-text detail-text">Uptime: 99.5%→99.9%</text>
-            <text x="400" y="1230" class="flow-text detail-text">Cost/Incident: $0.50</text>
-            <text x="600" y="1230" class="flow-text detail-text">Response Time: 24/7</text>
-            <text x="800" y="1230" class="flow-text detail-text">Coverage: 100%</text>
-            <text x="1000" y="1230" class="flow-text detail-text">ROI: 300%+</text>
+            <!-- Cost Box -->
+            <rect x="900" y="730" width="260" height="140" rx="10" class="flow-box" stroke="#10b981"/>
+            <text x="1030" y="760" class="flow-text title-text">💰 Monthly Costs</text>
+            <text x="1030" y="785" class="flow-text detail-text">Vector: $0 (already running)</text>
+            <text x="1030" y="805" class="flow-text detail-text">Storage: $5 (existing)</text>
+            <text x="1030" y="825" class="flow-text detail-text">Logic Apps: ~$1</text>
+            <text x="1030" y="845" class="flow-text detail-text">Claude API: $50-100</text>
+            <text x="1030" y="865" class="flow-text detail-text" font-weight="bold">Total New Cost: ~$100/mo</text>
+            
+            <!-- ROI Box -->
+            <rect x="900" y="900" width="260" height="140" rx="10" class="flow-box" stroke="#8b5cf6"/>
+            <text x="1030" y="930" class="flow-text title-text">📊 Expected ROI</text>
+            <text x="1030" y="955" class="flow-text detail-text">• 70% fewer incidents</text>
+            <text x="1030" y="975" class="flow-text detail-text">• 80% less manual work</text>
+            <text x="1030" y="995" class="flow-text detail-text">• 5 min MTTD</text>
+            <text x="1030" y="1015" class="flow-text detail-text">• 24/7 coverage</text>
+            <text x="1030" y="1035" class="flow-text detail-text">• ROI: 10x in 3 months</text>
+            
+            <!-- Bottom Success Dashboard -->
+            <rect x="50" y="1250" width="820" height="120" rx="10" class="flow-box" stroke="#059669" fill="#f0fdf4"/>
+            <text x="460" y="1280" class="flow-text title-text">🎯 What You Already Have vs What You Need</text>
+            <text x="150" y="1310" class="flow-text detail-text" font-weight="bold">✅ Already Have:</text>
+            <text x="150" y="1330" class="flow-text detail-text">• AKS cluster running</text>
+            <text x="150" y="1350" class="flow-text detail-text">• Vector collecting logs</text>
+            <text x="350" y="1330" class="flow-text detail-text">• Storage account</text>
+            <text x="350" y="1350" class="flow-text detail-text">• 5-min log batches</text>
+            
+            <text x="550" y="1310" class="flow-text detail-text" font-weight="bold">📝 Need to Add:</text>
+            <text x="550" y="1330" class="flow-text detail-text">• Logic App/Function</text>
+            <text x="550" y="1350" class="flow-text detail-text">• Claude API access</text>
+            <text x="750" y="1330" class="flow-text detail-text">• Teams webhook</text>
+            <text x="750" y="1350" class="flow-text detail-text">• K8s permissions</text>
         </svg>
         
         <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="border-color: #f59e0b; background: rgba(245, 158, 11, 0.1);"></div>
+                <span>Vector (Existing)</span>
+            </div>
             <div class="legend-item">
                 <div class="legend-box" style="border-color: #0078d4;"></div>
                 <span>Azure Services</span>
             </div>
             <div class="legend-item">
                 <div class="legend-box" style="border-color: #7c3aed; background: rgba(124, 58, 237, 0.1);"></div>
-                <span>AI/Claude</span>
+                <span>Claude AI</span>
             </div>
             <div class="legend-item">
                 <div class="legend-box" style="border-color: #326ce5;"></div>
@@ -432,28 +517,24 @@
                 <div class="legend-box" style="border-color: #059669;"></div>
                 <span>Storage/Monitor</span>
             </div>
-            <div class="legend-item">
-                <div class="legend-box" style="border-color: #dc2626;"></div>
-                <span>Decision Point</span>
-            </div>
         </div>
         
         <div class="metrics-section">
             <div class="metric-card">
-                <div class="metric-value">5 min</div>
-                <div class="metric-label">Detection Time</div>
+                <div class="metric-value">2 hrs</div>
+                <div class="metric-label">Setup Time</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">$100</div>
+                <div class="metric-label">New Monthly Cost</div>
             </div>
             <div class="metric-card">
                 <div class="metric-value">70%</div>
                 <div class="metric-label">Automation Rate</div>
             </div>
             <div class="metric-card">
-                <div class="metric-value">24/7</div>
-                <div class="metric-label">Monitoring Coverage</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-value">$0.50</div>
-                <div class="metric-label">Cost per Incident</div>
+                <div class="metric-value">10x</div>
+                <div class="metric-label">ROI in 3 Months</div>
             </div>
         </div>
     </div>
